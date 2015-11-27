@@ -7,7 +7,7 @@ class JRuby < FPM::Cookery::Recipe
   homepage   "http://www.jruby.org/"
   source     "https://s3.amazonaws.com/jruby.org/downloads/#{version}/jruby-bin-#{version}.tar.gz"
   md5        "645bf4a1dcde3f19dc0fff75c8b4b685"
-  arch       "all"
+  arch       "amd64"
   license    "EPL 1.0 / GPL 2 / LGPL 2.1"
   maintainer "Filip Tepper <filip@tepper.pl>"
 
