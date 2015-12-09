@@ -38,7 +38,8 @@ class JRuby < FPM::Cookery::Recipe
   end
 
   def install
-    prefix("jruby-#{version}").install Dir["*"]
+    prefix("local").install Dir["*"]
+    etc('profile.d').install workdir('jruby.profile'), 'jruby.sh'
 
     with_trueprefix do
       File.open(builddir("post-install"), "w", 0755) do |f|
@@ -46,10 +47,11 @@ class JRuby < FPM::Cookery::Recipe
 #!/bin/sh
 set -e
 
-BIN_PATH="#{prefix("jruby-#{version}/bin")}"
+BIN_PATH="#{prefix("local/bin")}"
 
 for bin in ruby irb gem rubyc; do
   update-alternatives --install /usr/bin/$bin $bin $BIN_PATH/j$bin 20000
+  update-alternatives --install /usr/bin/j$bin j$bin $BIN_PATH/j$bin 20000
 done
 
 exit 0
@@ -62,11 +64,12 @@ exit 0
 #!/bin/sh
 set -e
 
-BIN_PATH="#{prefix("jruby-#{version}/bin")}"
+BIN_PATH="#{prefix("local/bin")}"
 
 if [ "$1" != "upgrade" ]; then
   for bin in ruby irb gem rubyc; do
     update-alternatives --remove $bin $BIN_PATH/j$bin
+    update-alternatives --remove j$bin $BIN_PATH/j$bin
   done
 fi
 
